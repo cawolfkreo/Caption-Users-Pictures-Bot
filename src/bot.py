@@ -2,14 +2,12 @@ from setup import TELEGRAM_API
 from textManager import (
     messageWithoutAt, 
     startsWithAt, 
-    printTime
-)
+    printTime)
 from telegram.ext import (
     Updater,
     CommandHandler,
     MessageHandler,
-    Filters
-)
+    Filters)
 import logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger('Meme captions bot!')
@@ -47,6 +45,11 @@ def text(update, context):
     )
 text_handler = MessageHandler(Filters.text & (~Filters.command), text)
 
+'''
+This is the starting function for the bot.
+When it's called the bot is given the handlers
+and it's execution starts.
+'''
 def startBot():
     updater = Updater(token=TELEGRAM_API, use_context=True)
     dispatcher = updater.dispatcher
@@ -56,7 +59,7 @@ def startBot():
 
     updater.start_polling()                     #Starts the bot 
     printTime("The bot is up! :)")
-    updater.idle()                              #Makes sure the bot stops when ctrl+c signal is sent
+    updater.idle()                              #Makes sure the bot stops when the ctrl+c signal is sent
     printTime("The bot stopped :C")
 
 
