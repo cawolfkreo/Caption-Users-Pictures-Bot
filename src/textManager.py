@@ -1,7 +1,18 @@
 from datetime import datetime
 
-def messageWithoutAt(textMessage):
-    return re.split(startsAtRegEx, textMessage)[-1]
+'''
+This is the key needed to access the 
+user dictionary on the cotext.bot_data 
+dictionary.
+'''
+userKey = "userDict"
+
+'''
+This is the key needed to access the 
+random # of messages on the cotext.chat_data 
+dictionary.
+'''
+randomKey = "randomMsg"
 
 def printTime(textToPrint):
     now = datetime.now()
@@ -15,32 +26,52 @@ def isEmptyDict(pDict):
     return bool(pDict)
 
 def getMentions(entitiesDict, typeToSearch):
-    mentions = None
     for entity, text in entitiesDict.items():
-        print (entity.type, text)
         if(entity.type == typeToSearch):
             return text
-    return mentions
-
-def userIDFromUsername(username, userDict):
-    for usr, telegramId in userDict.items():
-        if(username == usr):
-            return telegramId
     return None
 
-def addUserIDToDict(username, userID, userDict):
-    userDict[username] = userID
+def userIDFromUsername(username, userDict):
+    test = userDict
+    validUsername = username[1:]                    #The username on the dictionary does not contain 
+                                                    #the "@" at the begining. It needs to be removed
+                                                    #to be a valid key for the dictionary.
+    if(validUsername in userDict):
+        return userDict[validUsername]
+    else:
+        return None
+
+def generateRandom():
+    return 0
+
+def processImage(mention, bot_data, chat_data):
+    msgsToNextPicture = 0
+    if(randomKey not in chat_data):
+        msgsToNextPicture = generateRandom()
+    else:
+        msgsToNextPicture = chat_data[randomKey] - 1
+
+    if(msgsToNextPicture < 1 and userKey in bot_data):
+        userId = userIDFromUsername(mention, bot_data[userKey])
+        if(userId):
+            chat_data[randomKey] = generateRandom()
+        return userId
+    else:
+        chat_data[randomKey] = msgsToNextPicture
+        return None
+
+def addUserIDToDict(messageUser, userDict):
+    test = userDict
+    userDict[messageUser.username] = messageUser.id
     return userDict
 
-def processImage(mention, chatData):
-    userId = userIDFromUsername(mention, chatData["userDict"])
-    return userId
+def processUser(messageUser, bot_data):
+    if(not messageUser.is_bot):
+        if(userKey not in bot_data):
+            newUserDict = {}
+            bot_data[userKey] = addUserIDToDict(messageUser, newUserDict)
+        elif(messageUser.username not in bot_data[userKey]):
+            bot_data[userKey] = addUserIDToDict(messageUser, bot_data[userKey])
 
 if __name__ == "__main__":
-    printTime("test")
-    users = {"@cawolf": 1, "@test": 2 }
-    cawolf = userIDFromUsername("@cawolf", users)
-    none = userIDFromUsername("lel, nada", users)
-    print("cawolf: {} none: {}".format(cawolf, none))
-    addedDict = addUserIDToDict("test", 1, {"a": 2})
-    print("The dictionary: {}" .format(addedDict))
+    pass

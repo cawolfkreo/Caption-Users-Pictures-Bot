@@ -3,10 +3,9 @@ from textManager import (
     getMentions,
     isEmptyDict,
     isMessageFromAGroup,
-    messageWithoutAt,
     printTime,
     processImage,
-    userIDFromUsername)
+    processUser)
 from telegram import MessageEntity
 from telegram.ext import (
     CommandHandler,
@@ -33,7 +32,7 @@ start_handler = CommandHandler('start', start)
 
 '''
 This is the function called by the bot
-when a the bot sees a text message. The
+when the bot sees a text message. The
 handler is created bellow the function
 and will be given to the bot on the 
 startBot function.
@@ -44,12 +43,31 @@ def text(update, context):
         entities = update.message.parse_entities()
         if(isEmptyDict(entities)):
             mention = getMentions(entities, MessageEntity.MENTION)
-            decision = processImage(mention, context.chat_data)
-
-        printTime("Si es válido!")
+            decision = processImage(mention, context.bot_data, context.chat_data)
+            if(decision and update.effective_message):
+                message = update.effective_message
+                context.bot.send_message(
+                chat_id = update.effective_chat.id, 
+                text = "Imagine this is the profile picture of {} " +
+                        "with the text from the message I replied (?)" + 
+                        "😅".format(mention),
+                reply_to_message_id = message.message_id)
     else:
         printTime("No es válido! " + update.effective_chat.type)
 text_handler = MessageHandler(Filters.text & (~Filters.command), text)
+
+'''
+This is the function called by the bot
+when the bot sees any message. The idea
+is that the bot will store the userIDs
+of every group message it sees.
+'''
+def everything(update, context):
+    chat = update.effective_chat
+    if(chat and isMessageFromAGroup(chat.type)):
+        messageUser = update.effective_user
+        processUser(messageUser, context.bot_data)
+everything_handler = MessageHandler(Filters.all, everything)
 
 '''
 This is the starting function for the bot.
@@ -60,12 +78,13 @@ def startBot():
     updater = Updater(token=TELEGRAM_API, use_context=True)
     dispatcher = updater.dispatcher
 
-    dispatcher.add_handler(start_handler)       #The start handler is given to the bot
-    dispatcher.add_handler(text_handler)        #The text handler is given to the bot
+    dispatcher.add_handler(start_handler)                   #The start handler is given to the bot
+    dispatcher.add_handler(text_handler)                    #The text handler is given to the bot
+    dispatcher.add_handler(everything_handler, group = 1)   #The default handler is given to the bot
 
-    updater.start_polling()                     #Starts the bot 
+    updater.start_polling()                                 #Starts the bot 
     printTime("The bot is up! :)")
-    updater.idle()                              #Makes sure the bot stops when the ctrl+c signal is sent
+    updater.idle()                                          #Makes sure the bot stops when the ctrl+c signal is sent
     printTime("The bot stopped :C")
 
 
