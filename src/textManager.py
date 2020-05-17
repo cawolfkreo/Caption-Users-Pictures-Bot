@@ -22,7 +22,7 @@ def printTime(textToPrint):
 def isMessageFromAGroup(typeOfMessage):
     return "group" in typeOfMessage or "channel" in typeOfMessage
 
-def isEmptyDict(pDict):
+def isNoEmptyDict(pDict):
     return bool(pDict)
 
 def getMentions(entitiesDict, typeToSearch):

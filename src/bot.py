@@ -1,7 +1,7 @@
 from setup import TELEGRAM_API
 from textManager import (
     getMentions,
-    isEmptyDict,
+    isNoEmptyDict,
     isMessageFromAGroup,
     printTime,
     processImage,
@@ -41,7 +41,7 @@ def text(update, context):
     chat = update.effective_chat
     if(chat and isMessageFromAGroup(chat.type)):
         entities = update.message.parse_entities()
-        if(isEmptyDict(entities)):
+        if(isNoEmptyDict(entities)):
             mention = getMentions(entities, MessageEntity.MENTION)
             decision = processImage(mention, context.bot_data, context.chat_data)
             if(decision and update.effective_message):
