@@ -1,13 +1,18 @@
 from setup import TELEGRAM_API
 from textManager import (
-    messageWithoutAt, 
-    startsWithAt, 
-    printTime)
+    getMentions,
+    isEmptyDict,
+    isMessageFromAGroup,
+    messageWithoutAt,
+    printTime,
+    processImage,
+    userIDFromUsername)
+from telegram import MessageEntity
 from telegram.ext import (
-    Updater,
     CommandHandler,
+    Filters,
     MessageHandler,
-    Filters)
+    Updater)
 import logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger('Meme captions bot!')
@@ -34,15 +39,16 @@ and will be given to the bot on the
 startBot function.
 '''
 def text(update, context):
-    reply = "I saw no @ 😢."
-    textMessage = update.message.text
-    if(startsWithAt(textMessage)):
-        reply = "I saw an @! 😃"
+    chat = update.effective_chat
+    if(chat and isMessageFromAGroup(chat.type)):
+        entities = update.message.parse_entities()
+        if(isEmptyDict(entities)):
+            mention = getMentions(entities, MessageEntity.MENTION)
+            decision = processImage(mention, context.chat_data)
 
-    context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text = reply
-    )
+        printTime("Si es válido!")
+    else:
+        printTime("No es válido! " + update.effective_chat.type)
 text_handler = MessageHandler(Filters.text & (~Filters.command), text)
 
 '''
