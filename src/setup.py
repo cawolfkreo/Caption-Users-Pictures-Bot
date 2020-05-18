@@ -7,7 +7,7 @@ ISPRODUCTION = os.getenv("ISPRODUCTION")
 APPNAME = os.getenv("APPNAME")
 PORT = 1
 if (ISPRODUCTION):
-    PORT = int(os.environ.get("PORT", os.getenv("PORT")))
+    PORT = int(os.environ.get("PORT", "8443"))
 
 if __name__ == "__main__":
     print("The telegram token is: {}".format(TELEGRAM_API))
