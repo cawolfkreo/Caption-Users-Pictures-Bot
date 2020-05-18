@@ -29,8 +29,26 @@ def start(update, context):
     context.bot.send_message(
         chat_id=update.effective_chat.id, 
         text="Hi! I am a bot made to add messages to profiles pictures of "+
-        "people on group chats! just add me to a groupchat and wait for the magic to happen!")
+        "people on group chats! just add me to a groupchat and wait for the "+
+        "magic to happen!")
 start_handler = CommandHandler('start', start)
+
+'''
+This is the function called by the bot
+when the "/about" command is executed.
+The handler is created bellow the function
+and will be given to the bot on the
+startBot function.
+'''
+def about(update, context):
+    context.bot.send_message(
+        chat_id=update.effective_chat.id, 
+        text="Hello! I am a bot 🤖 made by **@Cawolf** to randomly"+
+        "caption people's profile pictures. You can find my source "+
+        "code [on this github repository]"+
+        "(https://github.com/cawolfkreo/Caption-Users-Picures-Bot)",
+        parse_mode="Markdown")
+about_handler = CommandHandler('about', about)
 
 '''
 This is the function called by the bot
@@ -55,13 +73,18 @@ def text(update, context):
             resultImage = processImage(userProfilePic, message.text, mention)
             
             if(resultImage):
-                context.bot.sendPhoto(chat_id = update.effective_chat.id, photo=resultImage)
-            else:
-                context.bot.send_message(
+                context.bot.sendPhoto(
                     chat_id = update.effective_chat.id, 
-                    text = ("Imagine this is the profile picture of {} " +
-                            "with the text from the message I replied (?) " + 
-                            "😅").format(mention),
+                    photo=resultImage,
+                    reply_to_message_id = message.message_id)
+            else:
+                #if the user has no profile picture the bot will
+                #default to this message as a reply.
+                context.bot.sendMessage(
+                    chat_id = update.effective_chat.id, 
+                    text = ("Imagine this is the non existant profile " +
+                            "picture of {} with the text from the " + 
+                            "message I replied (?) 😅").format(mention),
                     reply_to_message_id = message.message_id)
 text_handler = MessageHandler(Filters.text & (~Filters.command), text)
 
@@ -89,6 +112,7 @@ def startBot():
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(start_handler)                   #The start handler is given to the bot
+    dispatcher.add_handler(about_handler)                   #The about handler is given to the bot
     dispatcher.add_handler(text_handler)                    #The text handler is given to the bot
     dispatcher.add_handler(everything_handler, group = 1)   #The default handler is given to the bot
 

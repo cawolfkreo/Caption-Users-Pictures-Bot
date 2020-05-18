@@ -22,14 +22,14 @@ The smallest possible number the
 random number generation will
 generate when called.
 '''
-rndLowerBound = 4
+rndLowerBound = 3
 
 '''
 The biggest possible number the
 random number generation will
 generate when called.
 '''
-rndUpperBound = 10
+rndUpperBound = 6
 
 def printTime(textToPrint):
     now = datetime.now()
@@ -59,8 +59,7 @@ def userIDFromUsername(username, userDict):
         return None
 
 def generateRandom():
-    #return random.randint(rndLowerBound, rndUpperBound)
-    return 0
+    return random.randint(rndLowerBound, rndUpperBound)
 
 def shouldProcessImage(mention, bot_data, chat_data):
     msgsToNextPicture = 0
