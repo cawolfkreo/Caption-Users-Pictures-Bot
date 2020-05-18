@@ -1,4 +1,4 @@
-from setup import TELEGRAM_API
+from setup import APPNAME, ISPRODUCTION, PORT, TELEGRAM_API
 from textManager import (
     getMentions,
     isNoEmptyDict,
@@ -116,7 +116,14 @@ def startBot():
     dispatcher.add_handler(text_handler)                    #The text handler is given to the bot
     dispatcher.add_handler(everything_handler, group = 1)   #The default handler is given to the bot
 
-    updater.start_polling()                                 #Starts the bot 
+    if(ISPRODUCTION):
+        updater.start_webhook(listen="0.0.0.0",
+                                port=PORT,
+                                url_path=TELEGRAM_API)
+        webhook = ("https://{}.herokuapp.com/" + TELEGRAM_API).format(APPNAME)
+        updater.bot.set_webhook(webhook)                    #starts the bot if it is hosted on Heroku
+    else:
+        updater.start_polling()                             #Starts the bot 
     printTime("The bot is up! :)")
     updater.idle()                                          #Makes sure the bot stops when the ctrl+c signal is sent
     printTime("The bot stopped :C")
