@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 TELEGRAM_API = os.getenv("TELEGRAM_API")
-ISPRODUCTION = os.getenv("ISPRODUCTION")
+ISPRODUCTION = os.getenv("ISPRODUCTION") == "TRUE"
 APPNAME = os.getenv("APPNAME")
 PORT = 1
 if (ISPRODUCTION):
