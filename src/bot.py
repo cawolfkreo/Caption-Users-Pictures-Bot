@@ -51,14 +51,17 @@ def text(update, context):
 
             message = update.effective_message
             userProfilePic = context.bot.getUserProfilePhotos(telegramUserId, limit = 1)
-            reultImage = processImage(userProfilePic)
-
-            context.bot.send_message(
-                chat_id = update.effective_chat.id, 
-                text = ("Imagine this is the profile picture of {} " +
-                        "with the text from the message I replied (?) " + 
-                        "😅").format(mention),
-                reply_to_message_id = message.message_id)
+            resultImage = processImage(userProfilePic)
+            
+            if(resultImage):
+                context.bot.sendPhoto(chat_id = update.effective_chat.id, photo=resultImage)
+            else:
+                context.bot.send_message(
+                    chat_id = update.effective_chat.id, 
+                    text = ("Imagine this is the profile picture of {} " +
+                            "with the text from the message I replied (?) " + 
+                            "😅").format(mention),
+                    reply_to_message_id = message.message_id)
 text_handler = MessageHandler(Filters.text & (~Filters.command), text)
 
 '''

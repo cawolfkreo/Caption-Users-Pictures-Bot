@@ -1,4 +1,5 @@
 from datetime import datetime
+from io import BytesIO
 import random
 
 '''
@@ -93,6 +94,10 @@ def processImage(userProfilePic):
     if(userProfilePic.total_count > 0):
         profilePicture = userProfilePic.photos[0][-1].get_file()        #This is the High resolution of the users profile picture.
         photoByteArr = profilePicture.download_as_bytearray()
+        newByteArr = BytesIO(photoByteArr)
+        newByteArr.name = "response.jpg"
+        newByteArr.seek(0)
+        return newByteArr
     return None
 
 if __name__ == "__main__":
