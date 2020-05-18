@@ -22,14 +22,14 @@ The smallest possible number the
 random number generation will
 generate when called.
 '''
-rndLowerBound = 3
+rndLowerBound = 1
 
 '''
 The biggest possible number the
 random number generation will
 generate when called.
 '''
-rndUpperBound = 6
+rndUpperBound = 7
 
 def printTime(textToPrint):
     now = datetime.now()
