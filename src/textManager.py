@@ -1,4 +1,5 @@
 from datetime import datetime
+import random
 
 '''
 This is the key needed to access the 
@@ -13,6 +14,20 @@ random # of messages on the cotext.chat_data
 dictionary.
 '''
 randomKey = "randomMsg"
+
+'''
+The smallest possible number the
+random number generation will
+generate when called.
+'''
+rndLowerBound = 4
+
+'''
+The biggest possible number the
+random number generation will
+generate when called.
+'''
+rndUpperBound = 10
 
 def printTime(textToPrint):
     now = datetime.now()
@@ -42,7 +57,7 @@ def userIDFromUsername(username, userDict):
         return None
 
 def generateRandom():
-    return 0
+    return random.randint(rndLowerBound, rndUpperBound)
 
 def processImage(mention, bot_data, chat_data):
     msgsToNextPicture = 0
