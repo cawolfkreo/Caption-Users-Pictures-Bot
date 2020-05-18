@@ -5,8 +5,9 @@ from textManager import (
     isMessageFromAGroup,
     printTime,
     processImage,
-    processUser)
-from telegram import MessageEntity
+    processUser,
+    shouldProcessImage)
+from telegram import MessageEntity, ChatAction
 from telegram.ext import (
     CommandHandler,
     Filters,
@@ -39,21 +40,25 @@ startBot function.
 '''
 def text(update, context):
     chat = update.effective_chat
-    if(chat and isMessageFromAGroup(chat.type)):
-        entities = update.message.parse_entities()
-        if(isNoEmptyDict(entities)):
-            mention = getMentions(entities, MessageEntity.MENTION)
-            decision = processImage(mention, context.bot_data, context.chat_data)
-            if(decision and update.effective_message):
-                message = update.effective_message
-                context.bot.send_message(
+    entities = update.message.parse_entities()
+    if(chat and isMessageFromAGroup(chat.type) and isNoEmptyDict(entities)):
+        mention = getMentions(entities, MessageEntity.MENTION)
+        telegramUserId = shouldProcessImage(mention, context.bot_data, context.chat_data)
+        if(telegramUserId and update.effective_message):
+            context.bot.sendChatAction(
+                chat_id = update.effective_chat.id,
+                action = ChatAction.UPLOAD_PHOTO)
+
+            message = update.effective_message
+            userProfilePic = context.bot.getUserProfilePhotos(telegramUserId, limit = 1)
+            reultImage = processImage(userProfilePic)
+
+            context.bot.send_message(
                 chat_id = update.effective_chat.id, 
                 text = ("Imagine this is the profile picture of {} " +
                         "with the text from the message I replied (?) " + 
                         "😅").format(mention),
                 reply_to_message_id = message.message_id)
-    else:
-        printTime("No es válido! " + update.effective_chat.type)
 text_handler = MessageHandler(Filters.text & (~Filters.command), text)
 
 '''

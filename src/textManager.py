@@ -57,9 +57,10 @@ def userIDFromUsername(username, userDict):
         return None
 
 def generateRandom():
-    return random.randint(rndLowerBound, rndUpperBound)
+    #return random.randint(rndLowerBound, rndUpperBound)
+    return 0
 
-def processImage(mention, bot_data, chat_data):
+def shouldProcessImage(mention, bot_data, chat_data):
     msgsToNextPicture = 0
     if(randomKey not in chat_data):
         msgsToNextPicture = generateRandom()
@@ -87,6 +88,12 @@ def processUser(messageUser, bot_data):
             bot_data[userKey] = addUserIDToDict(messageUser, newUserDict)
         elif(messageUser.username not in bot_data[userKey]):
             bot_data[userKey] = addUserIDToDict(messageUser, bot_data[userKey])
+
+def processImage(userProfilePic):
+    if(userProfilePic.total_count > 0):
+        profilePicture = userProfilePic.photos[0][-1].get_file()        #This is the High resolution of the users profile picture.
+        photoByteArr = profilePicture.download_as_bytearray()
+    return None
 
 if __name__ == "__main__":
     pass
