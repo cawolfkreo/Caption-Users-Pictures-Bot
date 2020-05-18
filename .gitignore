@@ -130,6 +130,5 @@ dmypy.json
 .vscode/
 
 #Project specific
-.data
-.data/
-.data/*
+data
+data/*
