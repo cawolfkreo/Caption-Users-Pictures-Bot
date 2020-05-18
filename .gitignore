@@ -128,3 +128,8 @@ dmypy.json
 .vscode
 .vscode/*
 .vscode/
+
+#Project specific
+.data
+.data/
+.data/*
