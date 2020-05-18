@@ -12,6 +12,7 @@ from telegram.ext import (
     CommandHandler,
     Filters,
     MessageHandler,
+    PicklePersistence,
     Updater)
 import logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -83,7 +84,8 @@ When it's called the bot is given the handlers
 and it's execution starts.
 '''
 def startBot():
-    updater = Updater(token=TELEGRAM_API, use_context=True)
+    botPersistent = PicklePersistence(filename='sav.almcn')
+    updater = Updater(token=TELEGRAM_API, persistence=botPersistent, use_context=True)
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(start_handler)                   #The start handler is given to the bot

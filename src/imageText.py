@@ -35,7 +35,6 @@ def addTextToProfilePicture(profilePic, textToAdd):
 
     draw = ImageDraw.Draw(profilePic)
     w, h = draw.textsize(textToAdd, font)                       #measure the size the text will take in the picture.
-    
 
     charSize = round((w/len(textToAdd)))                        #the size in pixels of a single character
     charsPerLine = round(profilePic.width / charSize) - 1       #the amount of characters that can be draw on a single line.
