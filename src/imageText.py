@@ -10,7 +10,7 @@ from PIL import Image, ImageFont, ImageDraw
 import textwrap
 
 def createFontPath(fontRelativePath):
-    currentDir = path.dirname(__file__)
+    currentDir = "/src/"
     return path.join(currentDir, fontRelativePath)
 
 fontPath = createFontPath("font\OpenSans-SemiBold.ttf")
