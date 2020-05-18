@@ -59,7 +59,8 @@ def userIDFromUsername(username, userDict):
         return None
 
 def generateRandom():
-    return random.randint(rndLowerBound, rndUpperBound)
+    #return random.randint(rndLowerBound, rndUpperBound)
+    return 0
 
 def shouldProcessImage(mention, bot_data, chat_data):
     msgsToNextPicture = 0
@@ -91,7 +92,7 @@ def processUser(messageUser, bot_data):
             bot_data[userKey] = addUserIDToDict(messageUser, bot_data[userKey])
 
 def removeMention(textMessage, mention):
-    return textMessage.replace(mention, "")
+    return textMessage.replace(mention, "").strip()
 
 def processImage(userProfilePic, textMessage, mention):
     if(userProfilePic.total_count > 0):
