@@ -15,8 +15,8 @@ from telegram.ext import (
     PicklePersistence,
     Updater)
 import logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-logger = logging.getLogger('Meme captions bot!')
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
+logger = logging.getLogger("Meme captions bot!")
 
 '''
 This is the function called by the bot
