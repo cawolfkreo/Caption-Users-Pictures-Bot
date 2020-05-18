@@ -43,7 +43,7 @@ startBot function.
 def about(update, context):
     context.bot.send_message(
         chat_id=update.effective_chat.id, 
-        text="Hello! I am a bot 🤖 made by **@Cawolf** to randomly"+
+        text="Hello! I am a bot 🤖 made by **@Cawolf** to randomly "+
         "caption people's profile pictures. You can find my source "+
         "code [on this github repository]"+
         "(https://github.com/cawolfkreo/Caption-Users-Picures-Bot)",
