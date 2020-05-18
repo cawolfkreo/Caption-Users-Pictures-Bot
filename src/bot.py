@@ -51,7 +51,7 @@ def text(update, context):
 
             message = update.effective_message
             userProfilePic = context.bot.getUserProfilePhotos(telegramUserId, limit = 1)
-            resultImage = processImage(userProfilePic)
+            resultImage = processImage(userProfilePic, message.text, mention)
             
             if(resultImage):
                 context.bot.sendPhoto(chat_id = update.effective_chat.id, photo=resultImage)

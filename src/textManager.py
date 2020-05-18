@@ -1,4 +1,5 @@
 from datetime import datetime
+import imageText
 from io import BytesIO
 import random
 
@@ -58,8 +59,7 @@ def userIDFromUsername(username, userDict):
         return None
 
 def generateRandom():
-    #return random.randint(rndLowerBound, rndUpperBound)
-    return 0
+    return random.randint(rndLowerBound, rndUpperBound)
 
 def shouldProcessImage(mention, bot_data, chat_data):
     msgsToNextPicture = 0
@@ -90,14 +90,24 @@ def processUser(messageUser, bot_data):
         elif(messageUser.username not in bot_data[userKey]):
             bot_data[userKey] = addUserIDToDict(messageUser, bot_data[userKey])
 
-def processImage(userProfilePic):
+def removeMention(textMessage, mention):
+    return textMessage.replace(mention, "")
+
+def processImage(userProfilePic, textMessage, mention):
     if(userProfilePic.total_count > 0):
         profilePicture = userProfilePic.photos[0][-1].get_file()        #This is the High resolution of the users profile picture.
         photoByteArr = profilePicture.download_as_bytearray()
-        newByteArr = BytesIO(photoByteArr)
-        newByteArr.name = "response.jpg"
-        newByteArr.seek(0)
-        return newByteArr
+
+        oldImageBArr = BytesIO(photoByteArr)
+        img = imageText.createImage(oldImageBArr)
+
+        imageText.addTextToProfilePicture(img, removeMention(textMessage,mention))
+
+        newImageBArr = BytesIO()
+        newImageBArr.name = "response.jpg"
+        img.save(newImageBArr, "JPEG")
+        newImageBArr.seek(0)
+        return newImageBArr
     return None
 
 if __name__ == "__main__":
