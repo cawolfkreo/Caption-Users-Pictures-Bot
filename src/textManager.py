@@ -91,7 +91,8 @@ def processUser(messageUser, bot_data):
             bot_data[userKey] = addUserIDToDict(messageUser, bot_data[userKey])
 
 def removeMention(textMessage, mention):
-    return textMessage.replace(mention, "").strip()
+
+    return textMessage.replace(mention, "").replace("\n", "").strip()
 
 def processImage(userProfilePic, textMessage, mention):
     if(userProfilePic.total_count > 0):

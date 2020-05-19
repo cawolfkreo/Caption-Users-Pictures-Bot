@@ -63,7 +63,7 @@ def text(update, context):
     if(chat and isMessageFromAGroup(chat.type) and isNoEmptyDict(entities)):
         mention = getMentions(entities, MessageEntity.MENTION)
         telegramUserId = shouldProcessImage(mention, context.bot_data, context.chat_data)
-        if(telegramUserId and update.effective_message):
+        if(telegramUserId and update.effective_message and len(update.effective_message.text) < 500):
             context.bot.sendChatAction(
                 chat_id = update.effective_chat.id,
                 action = ChatAction.UPLOAD_PHOTO)
