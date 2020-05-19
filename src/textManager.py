@@ -106,7 +106,7 @@ def processImage(userProfilePic, textMessage, mention):
 
         newImageBArr = BytesIO()
         newImageBArr.name = "response.jpg"
-        img.save(newImageBArr, "JPEG")
+        img.save(newImageBArr, "PNG")
         newImageBArr.seek(0)
         return newImageBArr
     return None
