@@ -21,7 +21,7 @@ This project consists of a _python bot_ for telegram made to pick group chat mes
 <details><summary>Expand to see contents</summary>
   <p>
 
-* **Python v3.7.6+:** For the environment needed to code this bot.<br />
+* **Python v3.10.0+:** For the environment needed to code this bot.<br />
 * **python-telegram-bot :** As the wrapper for the telegram API (you can fin it [here](https://github.com/python-telegram-bot/python-telegram-bot)).<br />
 * **python-dotenv:** To load the .env file variables into the process enviroment (you can find it [here](https://github.com/theskumar/python-dotenv)).<br />
 * **Pillow:** To manipulate images and add text to them (you can find it [here](https://github.com/python-pillow/Pillow)).<br />
