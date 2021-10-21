@@ -93,7 +93,7 @@ when you see a message saying `The bot is up! :)` then it means the bot is activ
 If you are using Heroku as your cloud environment to deploy this project, **please make sure you have all the env variables for the project configured on Heroku before deploying**, you will need an extra variable I haven't mentioned called `APPNAME`, this variable needs to hold the name of your Heroku project, if you do so, the bot will connect to the Telegram api using webhooks instead of long polling, which can help improve performance and also makes sure the bot won't fall "asleep" on Heroku after some time. After that, you just need to push the contents of this repo to your heroku project and everything should be good to go.
 
 ### Deploy on other cloud services
-I have only worked with heroku for deploying bots, that's why I can't tell you how to deploy on other cloud services. Python-telegram-bot does have **[guides on how to do](https://github.com/python-telegram-bot/python-telegram-bot/wiki/Hosting-your-bot)** such process, but you might have to edit some of the code and files from this repo by yourself. 
+I have only worked with heroku for deploying bots, that's why I can't tell you how to deploy on other cloud services. Python-telegram-bot does have **[guides on how to do this process](https://github.com/python-telegram-bot/python-telegram-bot/wiki/Hosting-your-bot)**, but you might have to edit some of the code and files from this repo before trying this.
 
 ## Authors
 * [__Camilo Zambrano Votto__](https://github.com/cawolfkreo)
