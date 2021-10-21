@@ -1,4 +1,4 @@
-# ¿Haven't you wished you could "meme"-fy people at random?
+# Haven't you wished you could "meme"-fy people at random?
 ## Table of Contents
 <details><summary>Expand to see contents</summary>
   <p>
