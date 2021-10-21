@@ -3,33 +3,33 @@ import imageText
 from io import BytesIO
 import random
 
+userKey = "userDict"
 '''
 This is the key needed to access the 
 user dictionary on the cotext.bot_data 
 dictionary.
 '''
-userKey = "userDict"
 
+randomKey = "randomMsg"
 '''
 This is the key needed to access the 
 random # of messages on the cotext.chat_data 
 dictionary.
 '''
-randomKey = "randomMsg"
 
+rndLowerBound = 1
 '''
 The smallest possible number the
 random number generation will
 generate when called.
 '''
-rndLowerBound = 1
 
+rndUpperBound = 7
 '''
 The biggest possible number the
 random number generation will
 generate when called.
 '''
-rndUpperBound = 7
 
 def printTime(textToPrint):
     now = datetime.now()

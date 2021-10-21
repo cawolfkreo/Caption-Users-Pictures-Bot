@@ -47,15 +47,34 @@ Now is when you clone/download this repo, make a folder for it and save it anywh
 ### Make sure you have python 
 Before you begin make sure you have python and pip installed in your sistem. You can do it by typing:
 
-```
-python -v
-pip -v
+```Powershell
+python -V
+pip -V
 ```
 Those two commands should print you the versión of those programs you have installed. If you don't see any message or an error, then make sure you install [Python](https://www.python.org/) on your system.
 
+### (Optional) Virtual Environment
+If you want to separate this python project packages from other projects you might have, you can use a `venv` (Virtual Environment) for this project. To do this, **before you install any packages** you need to run this command:
+```Powershell
+python -m venv path/to/your/venv
+```
+I recomend you use ".venv/" for your path but you can use any other name you want. Just make sure you add it to your `.gitIgnore` file before pushing any changes to this repository. Once the environment is created, make sure to activate based on your OS/Terminal:
+#### CMD
+```
+./path/to/your/venv/Scripts/Activate.bat
+```
+#### Powershell
+```Powershell
+./path/to/your/venv/Scripts/Activate.ps1
+```
+#### Bash or Zsh
+```Sh
+source bin/activate
+```
+
 ### Install Modules
 It is recommended you create a virtual enviorenment before installing any modules for the project, but it's completelly optional and up to you. Now, we are almost done, last thing we have to do before deployment is to add the required python modules, to do that you need to open a console in the path where you cloned/downloaded the repo and type:
-```
+```Powershell
 pip install -r requirements.txt
 ``` 
 pip will download and install all the modules required for the project. This can take a few seconds, but after it you are ready to deploy.
