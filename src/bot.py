@@ -1,5 +1,7 @@
+from PIL.Image import TRANSVERSE
+import telegram
 from setup import APPNAME, ISPRODUCTION, PORT, TELEGRAM_API
-from telegram import MessageEntity, ChatAction, Update, update
+from telegram import MessageEntity, ChatAction, Update, UserProfilePhotos
 from telegram.ext import (
     CommandHandler,
     Filters,
@@ -16,12 +18,13 @@ from textManager import (
     processImage,
     processUser,
     shouldProcessImage,
-    validMessageLength)
+    validMessageLength,
+    getUserIdFromBotData)
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger("Meme captions bot!")
 
-def start(update: Update, context: callbackcontext):
+def start(update: Update, context: callbackcontext.CallbackContext):
     '''
     This is the function called by the bot
     when the "/start" command is executed.
@@ -32,7 +35,7 @@ def start(update: Update, context: callbackcontext):
         "people on group chats! just add me to a groupchat and wait for the "+
         "magic to happen!")
 
-def about(update: Update, context: callbackcontext):
+def about(update: Update, context: callbackcontext.CallbackContext):
     '''
     This is the function called by the bot
     when the "/about" command is executed.
@@ -51,6 +54,10 @@ def text(update: Update, context: callbackcontext):
     when the bot sees a text message.
     '''
     chat = update.effective_chat
+
+    if not update.message:
+        return
+
     entities = update.message.parse_entities([MessageEntity.MENTION])
     if not (chat and isMessageFromAGroup(chat.type) and DictHasElems(entities)):
         return
@@ -89,7 +96,85 @@ def text(update: Update, context: callbackcontext):
                     "profile picture 😅"),
             reply_to_message_id = message.message_id)
         
+def evilMeme(update: Update, context: callbackcontext.CallbackContext):
+    '''
+    This is the function called by the bot
+    when the bot sees the /evil command.
+    '''
+    chat = update.effective_chat    
+    if not (chat and isMessageFromAGroup(chat.type)):
+        # We are not on a group
+        update.message.reply_text("Sorry you can only " +
+                            "use this command in groups 😅")
+        return
 
+    if not update.message:
+        return
+
+    entities = update.message.parse_entities([MessageEntity.MENTION])
+    if not entities:
+        # the user didn't mentioned another user by their alias
+        update.message.reply_text("Sorry to use this command " +
+                            "you need to provide a username alias" +
+                            "after the /evil 😅\nExample:" +
+                            "/evil @someUserAlias name any bottom text here")
+        return    
+
+    mention = getMentions(entities, MessageEntity.MENTION)
+    del context.args[0]
+    telegramUserId = getUserIdFromBotData(mention, context.bot_data)
+    if not telegramUserId:
+        # We couldn't find the userId
+        update.message.reply_text("Sorry for some reason I am not able" +
+                            "to find that user. Telegram is not allowing me" +
+                            "to look it up at the moment 😓")
+        return
+
+    
+    
+    if (len(context.args) == 0 or not context.args[0]):
+        # the user didn't provide the name
+        update.message.reply_text("Sorry to use this command " +
+                            "you need to provide the name of the " +
+                            "user after the alias 😢.\n" 
+                            "Example:\n" +
+                            "/evil @someUserAlias name any bottom text here")
+        return
+    name = context.args[0]
+    del context.args[0]
+
+    message = update.effective_message
+    textToDisplay = " ".join(context.args).strip()
+    if not(message and textToDisplay and validMessageLength(textToDisplay, mention)):
+        # the user didn't provide the text
+        update.message.reply_text("Sorry to use this command " +
+                            "you need to provide the text " +
+                            "to display at the bottom after " +
+                            "the image 😢.\nExample:\n" +
+                            "/evil @someUserAlias name any bottom text here")
+        return
+    
+    context.bot.sendChatAction(
+        chat_id = update.effective_chat.id,
+        action = ChatAction.UPLOAD_PHOTO)
+
+    userProfilePic: UserProfilePhotos = context.bot.getUserProfilePhotos(telegramUserId, limit = 1)
+    resultImage = processImage(userProfilePic, textToDisplay, mention, True, name)
+    
+    if resultImage:
+        update.message.reply_photo(photo=resultImage,)
+    else:
+        #if the user has no profile picture the bot will
+        #default to this message as a reply.
+        context.bot.sendMessage(
+            chat_id = update.effective_chat.id, 
+            text = ("Imagine this is the profile " +
+                    f"picture of {mention} with the text " +
+                    "from the message I replied (?) Sorry" +
+                    "but that user privacy settings " +
+                    "doesn't allow me to use his " +
+                    "profile picture 😅"),
+            reply_to_message_id = message.message_id)
 
 '''
 This is the function called by the bot
@@ -116,11 +201,13 @@ def startBot():
     start_handler = CommandHandler('start', start, run_async=True)
     about_handler = CommandHandler('about', about, run_async=True)
     text_handler = MessageHandler(Filters.text & (~Filters.command), text, run_async=True)
+    evil_handler = CommandHandler("evil", evilMeme, run_async=True)
     everything_handler = MessageHandler(Filters.all, everything, run_async=True)
 
     dispatcher.add_handler(start_handler)                   #The start handler is given to the bot
     dispatcher.add_handler(about_handler)                   #The about handler is given to the bot
     dispatcher.add_handler(text_handler)                    #The text handler is given to the bot
+    dispatcher.add_handler(evil_handler)                    #The evil meme handler is given to the bot
     dispatcher.add_handler(everything_handler, group = 1)   #The default handler is given to the bot
 
     if(ISPRODUCTION):
