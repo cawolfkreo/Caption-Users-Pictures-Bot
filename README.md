@@ -1,4 +1,4 @@
-# ¿Haven't you wished you could "meme"-fy people at random?
+# Haven't you wished you could "meme"-fy people at random?
 ## Table of Contents
 <details><summary>Expand to see contents</summary>
   <p>
@@ -21,7 +21,7 @@ This project consists of a _python bot_ for telegram made to pick group chat mes
 <details><summary>Expand to see contents</summary>
   <p>
 
-* **Python v3.7.6+:** For the environment needed to code this bot.<br />
+* **Python v3.10.0+:** For the environment needed to code this bot.<br />
 * **python-telegram-bot :** As the wrapper for the telegram API (you can fin it [here](https://github.com/python-telegram-bot/python-telegram-bot)).<br />
 * **python-dotenv:** To load the .env file variables into the process enviroment (you can find it [here](https://github.com/theskumar/python-dotenv)).<br />
 * **Pillow:** To manipulate images and add text to them (you can find it [here](https://github.com/python-pillow/Pillow)).<br />
@@ -47,15 +47,34 @@ Now is when you clone/download this repo, make a folder for it and save it anywh
 ### Make sure you have python 
 Before you begin make sure you have python and pip installed in your sistem. You can do it by typing:
 
-```
-python -v
-pip -v
+```Powershell
+python -V
+pip -V
 ```
 Those two commands should print you the versión of those programs you have installed. If you don't see any message or an error, then make sure you install [Python](https://www.python.org/) on your system.
 
+### (Optional) Virtual Environment
+If you want to separate this python project packages from other projects you might have, you can use a `venv` (Virtual Environment) for this project. To do this, **before you install any packages** you need to run this command:
+```Powershell
+python -m venv path/to/your/venv
+```
+I recomend you use ".venv/" for your path but you can use any other name you want. Just make sure you add it to your `.gitIgnore` file before pushing any changes to this repository. Once the environment is created, make sure to activate based on your OS/Terminal:
+#### CMD
+```
+./path/to/your/venv/Scripts/Activate.bat
+```
+#### Powershell
+```Powershell
+./path/to/your/venv/Scripts/Activate.ps1
+```
+#### Bash or Zsh
+```Sh
+source bin/activate
+```
+
 ### Install Modules
 It is recommended you create a virtual enviorenment before installing any modules for the project, but it's completelly optional and up to you. Now, we are almost done, last thing we have to do before deployment is to add the required python modules, to do that you need to open a console in the path where you cloned/downloaded the repo and type:
-```
+```Powershell
 pip install -r requirements.txt
 ``` 
 pip will download and install all the modules required for the project. This can take a few seconds, but after it you are ready to deploy.
@@ -74,7 +93,7 @@ when you see a message saying `The bot is up! :)` then it means the bot is activ
 If you are using Heroku as your cloud environment to deploy this project, **please make sure you have all the env variables for the project configured on Heroku before deploying**, you will need an extra variable I haven't mentioned called `APPNAME`, this variable needs to hold the name of your Heroku project, if you do so, the bot will connect to the Telegram api using webhooks instead of long polling, which can help improve performance and also makes sure the bot won't fall "asleep" on Heroku after some time. After that, you just need to push the contents of this repo to your heroku project and everything should be good to go.
 
 ### Deploy on other cloud services
-I have only worked with heroku for deploying bots, that's why I can't tell you how to deploy on other cloud services. Python-telegram-bot does have **[guides on how to do](https://github.com/python-telegram-bot/python-telegram-bot/wiki/Hosting-your-bot)** such process, but you might have to edit some of the code and files from this repo by yourself. 
+I have only worked with heroku for deploying bots, that's why I can't tell you how to deploy on other cloud services. Python-telegram-bot does have **[guides on how to do this process](https://github.com/python-telegram-bot/python-telegram-bot/wiki/Hosting-your-bot)**, but you might have to edit some of the code and files from this repo before trying this.
 
 ## Authors
 * [__Camilo Zambrano Votto__](https://github.com/cawolfkreo)
