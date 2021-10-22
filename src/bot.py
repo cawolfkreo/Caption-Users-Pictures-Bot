@@ -113,13 +113,19 @@ def evilMeme(update: Update, context: callbackcontext.CallbackContext):
     if not entities:
         # the user didn't mentioned another user by their alias
         update.message.reply_text("Sorry to use this command " +
-                            "you need to provide a username alias" +
+                            "you need to provide a username alias " +
                             "after the /evil 😅\nExample:" +
                             "/evil @someUserAlias name any bottom text here")
         return    
 
     mention = getMentions(entities, MessageEntity.MENTION)
     del context.args[0]
+    if mention == context.bot.name:
+        #sorry but I cannot use this on myself 
+        update.message.reply_text("sorry but I cannot use this on myself " +
+                            "Try somebody else, I appreciate the gesture btw 🤖👍")
+        return
+
     telegramUserId = getUserIdFromBotData(mention, context.bot_data)
     if not telegramUserId:
         # We couldn't find the userId
@@ -127,15 +133,13 @@ def evilMeme(update: Update, context: callbackcontext.CallbackContext):
                             "to find that user. Telegram is not allowing me" +
                             "to look it up at the moment 😓")
         return
-
-    
     
     if (len(context.args) == 0 or not context.args[0]):
         # the user didn't provide the name
         update.message.reply_text("Sorry to use this command " +
                             "you need to provide the name of the " +
                             "user after the alias 😢.\n" 
-                            "Example:\n" +
+                            "Example:\n " +
                             "/evil @someUserAlias name any bottom text here")
         return
     name = context.args[0]
