@@ -64,7 +64,7 @@ def text(update: Update, context: callbackcontext):
     telegramUserId = shouldProcessImage(mention, context.bot_data, context.chat_data)
     message = update.effective_message
 
-    if not(telegramUserId and message and validMessageLength(message.text)):
+    if not(telegramUserId and message and validMessageLength(message.text, mention)):
         return
     
     context.bot.sendChatAction(
