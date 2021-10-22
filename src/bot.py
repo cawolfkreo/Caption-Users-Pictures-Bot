@@ -1,46 +1,42 @@
 from setup import APPNAME, ISPRODUCTION, PORT, TELEGRAM_API
-from textManager import (
-    getMentions,
-    isNoEmptyDict,
-    isMessageFromAGroup,
-    printTime,
-    processImage,
-    processUser,
-    shouldProcessImage)
-from telegram import MessageEntity, ChatAction
+from telegram import MessageEntity, ChatAction, Update, update
 from telegram.ext import (
     CommandHandler,
     Filters,
     MessageHandler,
     PicklePersistence,
-    Updater)
+    Updater,
+    callbackcontext)
 import logging
+from textManager import (
+    getMentions,
+    DictHasElems,
+    isMessageFromAGroup,
+    printTime,
+    processImage,
+    processUser,
+    shouldProcessImage,
+    validMessageLength)
+
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger("Meme captions bot!")
 
-'''
-This is the function called by the bot
-when the "/start" command is executed.
-The handler is created bellow the function
-and will be given to the bot on the
-startBot function.
-'''
-def start(update, context):
+def start(update: Update, context: callbackcontext):
+    '''
+    This is the function called by the bot
+    when the "/start" command is executed.
+    '''
     context.bot.send_message(
         chat_id=update.effective_chat.id, 
         text="Hi! I am a bot made to add messages to profiles pictures of "+
         "people on group chats! just add me to a groupchat and wait for the "+
         "magic to happen!")
-start_handler = CommandHandler('start', start)
 
-'''
-This is the function called by the bot
-when the "/about" command is executed.
-The handler is created bellow the function
-and will be given to the bot on the
-startBot function.
-'''
-def about(update, context):
+def about(update: Update, context: callbackcontext):
+    '''
+    This is the function called by the bot
+    when the "/about" command is executed.
+    '''
     context.bot.send_message(
         chat_id=update.effective_chat.id, 
         text="Hello! I am a bot 🤖 made by **@Cawolf** to randomly "+
@@ -48,45 +44,52 @@ def about(update, context):
         "code [on this github repository]"+
         "(https://github.com/cawolfkreo/Caption-Users-Picures-Bot)",
         parse_mode="Markdown")
-about_handler = CommandHandler('about', about)
 
-'''
-This is the function called by the bot
-when the bot sees a text message. The
-handler is created bellow the function
-and will be given to the bot on the 
-startBot function.
-'''
-def text(update, context):
+def text(update: Update, context: callbackcontext):
+    '''
+    This is the function called by the bot
+    when the bot sees a text message.
+    '''
     chat = update.effective_chat
-    entities = update.message.parse_entities()
-    if(chat and isMessageFromAGroup(chat.type) and isNoEmptyDict(entities)):
-        mention = getMentions(entities, MessageEntity.MENTION)
-        telegramUserId = shouldProcessImage(mention, context.bot_data, context.chat_data)
-        if(telegramUserId and update.effective_message and len(update.effective_message.text) < 500):
-            context.bot.sendChatAction(
-                chat_id = update.effective_chat.id,
-                action = ChatAction.UPLOAD_PHOTO)
+    entities = update.message.parse_entities([MessageEntity.MENTION])
+    if not (chat and isMessageFromAGroup(chat.type) and DictHasElems(entities)):
+        return
 
-            message = update.effective_message
-            userProfilePic = context.bot.getUserProfilePhotos(telegramUserId, limit = 1)
-            resultImage = processImage(userProfilePic, message.text, mention)
-            
-            if(resultImage):
-                context.bot.sendPhoto(
-                    chat_id = update.effective_chat.id, 
-                    photo=resultImage,
-                    reply_to_message_id = message.message_id)
-            else:
-                #if the user has no profile picture the bot will
-                #default to this message as a reply.
-                context.bot.sendMessage(
-                    chat_id = update.effective_chat.id, 
-                    text = ("Imagine this is the non existant profile " +
-                            "picture of {} with the text from the " + 
-                            "message I replied (?) 😅").format(mention),
-                    reply_to_message_id = message.message_id)
-text_handler = MessageHandler(Filters.text & (~Filters.command), text)
+    mention = getMentions(entities, MessageEntity.MENTION)
+    telegramUserId = shouldProcessImage(mention, context.bot_data, context.chat_data)
+    message = update.effective_message
+
+    if not(telegramUserId and message and validMessageLength(message.text)):
+        return
+    
+    context.bot.sendChatAction(
+        chat_id = update.effective_chat.id,
+        action = ChatAction.UPLOAD_PHOTO)
+
+    userProfilePic = context.bot.getUserProfilePhotos(telegramUserId, limit = 1)
+    resultImage = processImage(userProfilePic, message.text, mention)
+    
+    if(resultImage):
+        update.message.reply_photo(photo=resultImage,)
+        
+        """ context.bot.sendPhoto(
+            chat_id = update.effective_chat.id, 
+            photo=resultImage,
+            reply_to_message_id = message.message_id) """
+    else:
+        #if the user has no profile picture the bot will
+        #default to this message as a reply.
+        context.bot.sendMessage(
+            chat_id = update.effective_chat.id, 
+            text = ("Imagine this is the profile " +
+                    f"picture of {mention} with the text " +
+                    "from the message I replied (?) Sorry" +
+                    "but that user privacy settings " +
+                    "doesn't allow me to use his " +
+                    "profile picture 😅"),
+            reply_to_message_id = message.message_id)
+        
+
 
 '''
 This is the function called by the bot
@@ -99,17 +102,21 @@ def everything(update, context):
     if(chat and isMessageFromAGroup(chat.type)):
         messageUser = update.effective_user
         processUser(messageUser, context.bot_data)
-everything_handler = MessageHandler(Filters.all, everything)
 
-'''
-This is the starting function for the bot.
-When it's called the bot is given the handlers
-and it's execution starts.
-'''
 def startBot():
+    '''
+    This is the starting function for the bot.
+    When it's called the bot is given the handlers
+    and it's execution starts.
+    '''
     botPersistent = PicklePersistence(filename='sav.almcn')
     updater = Updater(token=TELEGRAM_API, persistence=botPersistent, use_context=True)
     dispatcher = updater.dispatcher
+
+    start_handler = CommandHandler('start', start, run_async=True)
+    about_handler = CommandHandler('about', about, run_async=True)
+    text_handler = MessageHandler(Filters.text & (~Filters.command), text, run_async=True)
+    everything_handler = MessageHandler(Filters.all, everything, run_async=True)
 
     dispatcher.add_handler(start_handler)                   #The start handler is given to the bot
     dispatcher.add_handler(about_handler)                   #The about handler is given to the bot

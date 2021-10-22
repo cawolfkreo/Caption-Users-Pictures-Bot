@@ -1,4 +1,5 @@
 from datetime import datetime
+from telegram import messageentity
 import imageText
 from io import BytesIO
 import random
@@ -39,17 +40,22 @@ def printTime(textToPrint):
 def isMessageFromAGroup(typeOfMessage):
     return "group" in typeOfMessage or "channel" in typeOfMessage
 
-def isNoEmptyDict(pDict):
-    return bool(pDict)
+def DictHasElems(pDict):
+    """checks if a dictionary is
+    not empty"""
+    return not not pDict
 
-def getMentions(entitiesDict, typeToSearch):
+def getMentions(entitiesDict: dict, typeToSearch: messageentity):
     for entity, text in entitiesDict.items():
         if(entity.type == typeToSearch):
             return text
     return None
 
-def userIDFromUsername(username, userDict):
-    test = userDict
+def validMessageLength(message: str):
+    msgLen = len(message)
+    return (0 < msgLen) and (msgLen < 500)
+
+def userIDFromUsername(username: str, userDict: dict):
     validUsername = username[1:]                    #The username on the dictionary does not contain 
                                                     #the "@" at the begining. It needs to be removed
                                                     #to be a valid key for the dictionary.
@@ -63,14 +69,16 @@ def generateRandom():
 
 def shouldProcessImage(mention, bot_data, chat_data):
     msgsToNextPicture = 0
-    if(randomKey not in chat_data):
+    if (randomKey not in chat_data):
         msgsToNextPicture = generateRandom()
     else:
         msgsToNextPicture = chat_data[randomKey] - 1
 
-    if(msgsToNextPicture < 1 and userKey in bot_data):
+    msgsToNextPicture = 0 #TODO: Remueve esta linea
+
+    if (msgsToNextPicture < 1 and userKey in bot_data):
         userId = userIDFromUsername(mention, bot_data[userKey])
-        if(userId):
+        if (userId):
             chat_data[randomKey] = generateRandom()
         return userId
     else:
@@ -94,7 +102,7 @@ def removeMention(textMessage, mention):
 
     return textMessage.replace(mention, "").replace("\n", "").strip()
 
-def processImage(userProfilePic, textMessage, mention):
+def processImage(userProfilePic, textMessage, mention, invert=False):
     if(userProfilePic.total_count > 0):
         profilePicture = userProfilePic.photos[0][-1].get_file()        #This is the High resolution of the users profile picture.
         photoByteArr = profilePicture.download_as_bytearray()
@@ -102,7 +110,10 @@ def processImage(userProfilePic, textMessage, mention):
         oldImageBArr = BytesIO(photoByteArr)
         img = imageText.createImage(oldImageBArr)
 
-        imageText.addTextToProfilePicture(img, removeMention(textMessage,mention))
+        if not invert:
+            imageText.addTextToProfilePicture(img, removeMention(textMessage,mention))
+        else:
+            img = imageText.addTextToInverseProfilePicture(img, removeMention(textMessage,mention))
 
         newImageBArr = BytesIO()
         newImageBArr.name = "response.jpg"
