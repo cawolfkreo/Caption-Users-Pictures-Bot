@@ -213,7 +213,7 @@ def startBot():
                                 port=PORT,
                                 url_path=TELEGRAM_API)
         webhook = "https://{}.herokuapp.com/{}".format(APPNAME, TELEGRAM_API)
-        updater.bot.set_webhook(webhook)                    #starts the bot if it is hosted on Heroku
+        updater.start_webhook(webhook_url=webhook)          #starts the bot if it is hosted on Heroku
     else:
         updater.start_polling()                             #Starts the bot 
     printTime("The bot is up! :)")
