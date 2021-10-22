@@ -209,7 +209,7 @@ def startBot():
     dispatcher.add_handler(everything_handler, group = 1)   #The default handler is given to the bot
 
     if(ISPRODUCTION):
-        webhook = "https://{}.herokuapp.com/{}".format(APPNAME, TELEGRAM_API)
+        webhook = f"https://{APPNAME}.herokuapp.com/{TELEGRAM_API}"
         updater.start_webhook(listen="0.0.0.0",
                                 port=PORT,
                                 url_path=TELEGRAM_API,
