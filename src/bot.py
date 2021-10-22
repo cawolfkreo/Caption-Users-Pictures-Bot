@@ -209,11 +209,11 @@ def startBot():
     dispatcher.add_handler(everything_handler, group = 1)   #The default handler is given to the bot
 
     if(ISPRODUCTION):
+        webhook = f"https://{APPNAME}.herokuapp.com/{TELEGRAM_API}"
         updater.start_webhook(listen="0.0.0.0",
                                 port=PORT,
-                                url_path=TELEGRAM_API)
-        webhook = "https://{}.herokuapp.com/{}".format(APPNAME, TELEGRAM_API)
-        updater.start_webhook(webhook_url=webhook)          #starts the bot if it is hosted on Heroku
+                                url_path=TELEGRAM_API,
+                                webhook_url=webhook)
     else:
         updater.start_polling()                             #Starts the bot 
     printTime("The bot is up! :)")
