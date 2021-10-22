@@ -1,5 +1,3 @@
-from PIL.Image import TRANSVERSE
-import telegram
 from setup import APPNAME, ISPRODUCTION, PORT, TELEGRAM_API
 from telegram import MessageEntity, ChatAction, Update, UserProfilePhotos
 from telegram.ext import (
