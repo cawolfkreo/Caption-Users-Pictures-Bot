@@ -123,7 +123,7 @@ def evilMeme(update: Update, context: callbackcontext.CallbackContext):
     telegramUserId = getUserIdFromBotData(mention, context.bot_data)
     if not telegramUserId:
         # We couldn't find the userId
-        update.message.reply_text("Sorry for some reason I am not able" +
+        update.message.reply_text("Sorry for some reason I am not able " +
                             "to find that user. Telegram is not allowing me" +
                             "to look it up at the moment 😓")
         return
