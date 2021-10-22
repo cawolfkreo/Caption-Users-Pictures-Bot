@@ -123,7 +123,7 @@ def evilMeme(update: Update, context: callbackcontext.CallbackContext):
     if mention == context.bot.name:
         #sorry but I cannot use this on myself 
         update.message.reply_text("sorry but I cannot use this on myself " +
-                            "Try somebody else 🤖")
+                            "Try somebody else, I appreciate the gesture btw 🤖👍")
         return
 
     telegramUserId = getUserIdFromBotData(mention, context.bot_data)
