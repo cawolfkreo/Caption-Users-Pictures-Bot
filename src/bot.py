@@ -76,11 +76,6 @@ def text(update: Update, context: callbackcontext):
     
     if(resultImage):
         update.message.reply_photo(photo=resultImage,)
-        
-        """ context.bot.sendPhoto(
-            chat_id = update.effective_chat.id, 
-            photo=resultImage,
-            reply_to_message_id = message.message_id) """
     else:
         #if the user has no profile picture the bot will
         #default to this message as a reply.
