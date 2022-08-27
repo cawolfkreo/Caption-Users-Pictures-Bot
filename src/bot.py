@@ -221,7 +221,7 @@ def startBot():
 
 
 '''
-This makes sure the bot runs even if it's launched
+This makes sure the bot run even if it's launched
 from the file itself and not as a module.
 '''
 if __name__ == "__main__":
