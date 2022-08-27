@@ -30,7 +30,7 @@ def start(update: Update, context: callbackcontext.CallbackContext):
     context.bot.send_message(
         chat_id=update.effective_chat.id, 
         text="Hi! I am a bot made to add messages to profiles pictures of "+
-        "people on group chats! just add me to a groupchat and wait for the "+
+        "people on group chats! just add me to a group chat and wait for the "+
         "magic to happen!")
 
 def about(update: Update, context: callbackcontext.CallbackContext):
@@ -42,14 +42,14 @@ def about(update: Update, context: callbackcontext.CallbackContext):
         chat_id=update.effective_chat.id, 
         text="Hello! I am a bot 🤖 made by **@Cawolf** to randomly "+
         "caption people's profile pictures. You can find my source "+
-        "code [on this github repository]"+
+        "code [on this github repository.]"+
         "(https://github.com/cawolfkreo/Caption-Users-Picures-Bot)",
         parse_mode="Markdown")
 
 def text(update: Update, context: callbackcontext):
     '''
-    This is the function called by the bot
-    when the bot sees a text message.
+    This function is called by the bot
+    when it sees a text message.
     '''
     chat = update.effective_chat
 
@@ -83,7 +83,7 @@ def text(update: Update, context: callbackcontext):
             chat_id = update.effective_chat.id, 
             text = ("Imagine this is the profile " +
                     f"picture of {mention} with the text " +
-                    "from the message I replied (?) Sorry" +
+                    "from the message I replied (?) Sorry " +
                     "but that user privacy settings " +
                     "doesn't allow me to use his " +
                     "profile picture 😅"),
@@ -109,7 +109,7 @@ def evilMeme(update: Update, context: callbackcontext.CallbackContext):
         # the user didn't mentioned another user by their alias
         update.message.reply_text("Sorry to use this command " +
                             "you need to provide a username alias " +
-                            "after the /evil 😅\nExample:" +
+                            "after the /evil 😅\nExample: " +
                             "/evil @someUserAlias name any bottom text here")
         return    
 
