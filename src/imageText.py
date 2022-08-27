@@ -2,7 +2,7 @@
 A big part of the code displayed here is based of
 code from this guide: https://blog.lipsumarium.com/caption-memes-in-python/
 article. A big thanks to @lipsumar. You can also find
-the full code of his solution here:
+his complete solution here:
 https://github.com/lipsumar/meme-caption
 '''
 from os import path
@@ -24,7 +24,7 @@ def drawTextWithOutline(draw: ImageDraw, text, x, y):
 
 def addTextToProfilePicture(profilePic: Image, textToAdd, heightOffset=0):
     draw = ImageDraw.Draw(profilePic)
-    w, h = draw.textsize(textToAdd, _font)                       #measure the size the text will take in the picture.
+    w, h = draw.textsize(textToAdd, _font)                      #measure the size the text will take in the picture.
 
     charSize = round(w/len(textToAdd))                          #the size in pixels of a single character
     charsPerLine = round(profilePic.width / charSize) - 2       #the amount of characters that can be draw on a single line.
@@ -39,7 +39,7 @@ def addTextToProfilePicture(profilePic: Image, textToAdd, heightOffset=0):
         w, h = draw.textsize(textLines[i], _font)
         drawTextWithOutline(draw, textLines[i], 0.5*(profilePic.width - w), (i * h) + heightOffset)
 
-def addTextToInverseProfilePicture(profilePic, textToAdd: str, name="paco"):
+def addTextToInverseProfilePicture(profilePic: Image, textToAdd: str, name="paco"):
     inverted = ImageOps.invert(profilePic)
     baseMessage = f"Evil {name} be like:"
     addTextToProfilePicture(inverted, baseMessage)

@@ -76,11 +76,6 @@ def text(update: Update, context: callbackcontext):
     
     if(resultImage):
         update.message.reply_photo(photo=resultImage,)
-        
-        """ context.bot.sendPhoto(
-            chat_id = update.effective_chat.id, 
-            photo=resultImage,
-            reply_to_message_id = message.message_id) """
     else:
         #if the user has no profile picture the bot will
         #default to this message as a reply.
@@ -226,7 +221,7 @@ def startBot():
 
 
 '''
-This makes sure the bot runs even if it's launched
+This makes sure the bot run even if it's launched
 from the file itself and not as a module.
 '''
 if __name__ == "__main__":
