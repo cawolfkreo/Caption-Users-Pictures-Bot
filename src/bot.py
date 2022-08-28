@@ -125,8 +125,8 @@ def evilMeme(update: Update, context: callbackcontext.CallbackContext):
     if not telegramUserId:
         # We couldn't find the userId
         update.message.reply_text("Sorry for some reason I am not able " +
-                            "to find that user. Telegram is not allowing me" +
-                            "to look it up at the moment 😓")
+                            "to find that user. Telegram is not allowing " +
+                            "me to look it up at the moment 😓")
         return
     
     if (len(context.args) == 0 or not context.args[0]):
