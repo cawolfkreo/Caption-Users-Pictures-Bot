@@ -1,7 +1,6 @@
-import imp
 import logging
 from pathlib import Path
-from setup import APPNAME, ISPRODUCTION, PORT, TELEGRAM_API
+from setup import URL, ISPRODUCTION, PORT, TELEGRAM_API
 from telegram import MessageEntity, ChatAction, Update, UserProfilePhotos
 from telegram.ext import (
     CommandHandler,
@@ -211,16 +210,16 @@ def startBot():
     dispatcher.add_handler(everything_handler, group = 1)   #The default handler is given to the bot
 
     if(ISPRODUCTION):
-        webhook = f"https://{APPNAME}.herokuapp.com/{TELEGRAM_API}"
+        webhook = f"https://{URL}/bot{TELEGRAM_API}"
         updater.start_webhook(listen="0.0.0.0",
                                 port=PORT,
                                 url_path=TELEGRAM_API,
                                 webhook_url=webhook)
     else:
         updater.start_polling()                             #Starts the bot 
-    printTime("The bot is up! :)")
+    printTime(logger, "The bot is up! :)")
     updater.idle()                                          #Makes sure the bot stops when the ctrl+c signal is sent
-    printTime("The bot stopped :C")
+    printTime(logger, "The bot stopped :C")
 
 
 '''
