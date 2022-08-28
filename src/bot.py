@@ -210,7 +210,7 @@ def startBot():
     dispatcher.add_handler(everything_handler, group = 1)   #The default handler is given to the bot
 
     if(ISPRODUCTION):
-        webhook = f"https://{URL}/bot{TELEGRAM_API}"
+        webhook = f"https://{URL}/{TELEGRAM_API}"
         updater.start_webhook(listen="0.0.0.0",
                                 port=PORT,
                                 url_path=TELEGRAM_API,
