@@ -35,7 +35,7 @@ generate when called.
 def printTime(logger, textToPrint):
     now = datetime.now()
     current_time = now.strftime("[%Y/%m/%d - %r]")
-    logger.info(current_time, textToPrint)
+    logger.info(f"{current_time} {textToPrint}")
 
 def isMessageFromAGroup(typeOfMessage):
     return "group" in typeOfMessage or "channel" in typeOfMessage
