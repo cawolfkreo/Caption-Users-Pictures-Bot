@@ -1,3 +1,4 @@
+import logging
 from setup import APPNAME, ISPRODUCTION, PORT, TELEGRAM_API
 from telegram import MessageEntity, ChatAction, Update, UserProfilePhotos
 from telegram.ext import (
@@ -7,7 +8,6 @@ from telegram.ext import (
     PicklePersistence,
     Updater,
     callbackcontext)
-import logging
 from textManager import (
     getMentions,
     DictHasElems,
