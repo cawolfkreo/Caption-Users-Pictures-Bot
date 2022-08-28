@@ -1,4 +1,6 @@
+import imp
 import logging
+from pathlib import Path
 from setup import APPNAME, ISPRODUCTION, PORT, TELEGRAM_API
 from telegram import MessageEntity, ChatAction, Update, UserProfilePhotos
 from telegram.ext import (
@@ -191,7 +193,8 @@ def startBot():
     When it's called the bot is given the handlers
     and it's execution starts.
     '''
-    botPersistent = PicklePersistence(filename='sav.almcn')
+    Path("data").mkdir(parents=True, exist_ok=True)
+    botPersistent = PicklePersistence(filename="data/sav.almcn")
     updater = Updater(token=TELEGRAM_API, persistence=botPersistent, use_context=True)
     dispatcher = updater.dispatcher
 
