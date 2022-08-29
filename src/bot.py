@@ -1,4 +1,6 @@
-from setup import APPNAME, ISPRODUCTION, PORT, TELEGRAM_API
+import logging
+from pathlib import Path
+from setup import URL, ISPRODUCTION, PORT, TELEGRAM_API
 from telegram import MessageEntity, ChatAction, Update, UserProfilePhotos
 from telegram.ext import (
     CommandHandler,
@@ -7,7 +9,6 @@ from telegram.ext import (
     PicklePersistence,
     Updater,
     callbackcontext)
-import logging
 from textManager import (
     getMentions,
     DictHasElems,
@@ -125,8 +126,8 @@ def evilMeme(update: Update, context: callbackcontext.CallbackContext):
     if not telegramUserId:
         # We couldn't find the userId
         update.message.reply_text("Sorry for some reason I am not able " +
-                            "to find that user. Telegram is not allowing me" +
-                            "to look it up at the moment 😓")
+                            "to find that user. Telegram is not allowing " +
+                            "me to look it up at the moment 😓")
         return
     
     if (len(context.args) == 0 or not context.args[0]):
@@ -191,7 +192,8 @@ def startBot():
     When it's called the bot is given the handlers
     and it's execution starts.
     '''
-    botPersistent = PicklePersistence(filename='sav.almcn')
+    Path("data").mkdir(parents=True, exist_ok=True)
+    botPersistent = PicklePersistence(filename="data/sav.almcn")
     updater = Updater(token=TELEGRAM_API, persistence=botPersistent, use_context=True)
     dispatcher = updater.dispatcher
 
@@ -208,16 +210,16 @@ def startBot():
     dispatcher.add_handler(everything_handler, group = 1)   #The default handler is given to the bot
 
     if(ISPRODUCTION):
-        webhook = f"https://{APPNAME}.herokuapp.com/{TELEGRAM_API}"
+        webhook = f"https://{URL}/{TELEGRAM_API}"
         updater.start_webhook(listen="0.0.0.0",
                                 port=PORT,
                                 url_path=TELEGRAM_API,
                                 webhook_url=webhook)
     else:
         updater.start_polling()                             #Starts the bot 
-    printTime("The bot is up! :)")
+    printTime(logger, "The bot is up! :)")
     updater.idle()                                          #Makes sure the bot stops when the ctrl+c signal is sent
-    printTime("The bot stopped :C")
+    printTime(logger, "The bot stopped :C")
 
 
 '''

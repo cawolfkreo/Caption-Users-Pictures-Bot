@@ -32,10 +32,10 @@ random number generation will
 generate when called.
 '''
 
-def printTime(textToPrint):
+def printTime(logger, textToPrint):
     now = datetime.now()
     current_time = now.strftime("[%Y/%m/%d - %r]")
-    print(current_time, textToPrint)
+    logger.info(f"{current_time} {textToPrint}")
 
 def isMessageFromAGroup(typeOfMessage):
     return "group" in typeOfMessage or "channel" in typeOfMessage
