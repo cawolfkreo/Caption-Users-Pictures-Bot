@@ -36,7 +36,6 @@ def addTextToProfilePicture(profilePic: Image, textToAdd, heightOffset=0):
     heightOffset *= profilePic.height 
 
     for i in range(0, len(textLines)):
-        #w, h = draw.textsize(textLines[i], _font)
         _, _, w, h = draw.textbbox((0,0), textLines[i], _font)
         drawTextWithOutline(draw, textLines[i], 0.5*(profilePic.width - w), (i * h) + heightOffset)
 
