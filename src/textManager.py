@@ -95,12 +95,15 @@ def addUserIDToDict(messageUser, userDict):
     return userDict
 
 def processUser(messageUser, bot_data):
-    if(not messageUser.is_bot):
-        if(userKey not in bot_data):
-            newUserDict = {}
-            bot_data[userKey] = addUserIDToDict(messageUser, newUserDict)
-        elif(messageUser.username not in bot_data[userKey]):
-            bot_data[userKey] = addUserIDToDict(messageUser, bot_data[userKey])
+    if(messageUser.is_bot):
+        return
+    
+    if(userKey not in bot_data):
+        newUserDict = {}
+        bot_data[userKey] = addUserIDToDict(messageUser, newUserDict)
+    elif(messageUser.username not in bot_data[userKey]):
+        bot_data[userKey] = addUserIDToDict(messageUser, bot_data[userKey])
+        
 
 def removeMention(textMessage: str, mention: str):
     baseText = textMessage.replace(mention, "").replace("\n", "").strip()

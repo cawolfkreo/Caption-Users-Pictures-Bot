@@ -24,7 +24,7 @@ def drawTextWithOutline(draw: ImageDraw, text, x, y):
 
 def addTextToProfilePicture(profilePic: Image, textToAdd, heightOffset=0):
     draw = ImageDraw.Draw(profilePic)
-    w, h = draw.textsize(textToAdd, _font)                      #measure the size the text will take in the picture.
+    _, _, w, h = draw.textbbox((0,0), textToAdd, _font)         #measure the size the text will take in the picture.
 
     charSize = round(w/len(textToAdd))                          #the size in pixels of a single character
     charsPerLine = round(profilePic.width / charSize) - 2       #the amount of characters that can be draw on a single line.
@@ -36,11 +36,11 @@ def addTextToProfilePicture(profilePic: Image, textToAdd, heightOffset=0):
     heightOffset *= profilePic.height 
 
     for i in range(0, len(textLines)):
-        w, h = draw.textsize(textLines[i], _font)
+        _, _, w, h = draw.textbbox((0,0), textLines[i], _font)
         drawTextWithOutline(draw, textLines[i], 0.5*(profilePic.width - w), (i * h) + heightOffset)
 
 def addTextToInverseProfilePicture(profilePic: Image, textToAdd: str, name="paco"):
-    inverted = ImageOps.invert(profilePic)
+    inverted = ImageOps.invert(profilePic.convert("RGB"))
     baseMessage = f"Evil {name} be like:"
     addTextToProfilePicture(inverted, baseMessage)
 
@@ -52,12 +52,21 @@ def addTextToInverseProfilePicture(profilePic: Image, textToAdd: str, name="paco
     return inverted
 
 if __name__ == "__main__":
+    # t1
     img = createImage("data/test.jpg")
-    addTextToProfilePicture(img, "This is a tests that I hope accomplishes to show the image can be created correctly with text on the right position")
+    addTextToProfilePicture(img, "These are tests that I hope accomplishes to show the image can be created correctly with text on the right position")
     img.save("data/test-out.png")
+    # t2
     img = createImage("data/t2.jpg")
-    addTextToProfilePicture(img, "This is a tests that I hope accomplishes to show the image can be created correctly with text on the right position")
+    addTextToProfilePicture(img, "These are tests that I hope accomplishes to show the image can be created correctly with text on the right position")
     img.save("data/t2-out.png")
     img = createImage("data/t2.jpg")
-    img = addTextToInverseProfilePicture(img, "This is a tests that I hope accomplishes to show the image can be created correctly with text on the right position")
+    img = addTextToInverseProfilePicture(img, "These are tests that I hope accomplishes to show the image can be created correctly with text on the right position")
     img.save("data/t2-inv-out.png")
+    # T3
+    img = createImage("data/t3.png")
+    addTextToProfilePicture(img, "These are tests that I hope accomplishes to show the image can be created correctly with text on the right position")
+    img.save("data/t3-out.png")
+    img = createImage("data/t3.png")
+    img = addTextToInverseProfilePicture(img, "These are tests that I hope accomplishes to show the image can be created correctly with text on the right position")
+    img.save("data/t3-inv-out.png")
