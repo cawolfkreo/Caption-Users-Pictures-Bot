@@ -229,7 +229,7 @@ def startBot():
                                 webhook_url=webhook)
     else:
         updater.start_polling()                             #Starts the bot 
-    printTime(logger, "The bot is starting! :)")
+    printTime(logger, "The bot has started! :)")
     updater.idle()                                          #Makes sure the bot stops when the ctrl+c signal is sent
     printTime(logger, "The bot stopped :C")
 
