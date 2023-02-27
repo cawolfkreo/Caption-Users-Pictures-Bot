@@ -66,7 +66,6 @@ def text(update: Update, context: callbackcontext.CallbackContext):
         return
     
     if update.message.date.timestamp() < STARTUP_TIME:
-        printTime(logger, "Mensaje viejo, ignorado")
         return
 
     entities = update.message.parse_entities([MessageEntity.MENTION])
