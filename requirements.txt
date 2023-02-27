@@ -1,6 +1,6 @@
 APScheduler==3.6.3
 cachetools==4.2.2
-certifi==2020.4.5.1
+certifi==2022.12.7
 cffi==1.15.0
 cryptography==39.0.1
 decorator==4.4.2
