@@ -1,10 +1,10 @@
 import logging
+from datetime import datetime
 from pathlib import Path
 from threading import Timer
 from telegram import MessageEntity, ChatAction, Update, UserProfilePhotos
 from telegram.ext import (
     CommandHandler,
-    Dispatcher,
     Filters,
     MessageHandler,
     PicklePersistence,
@@ -25,7 +25,7 @@ from setup import URL, ISPRODUCTION, PORT, TELEGRAM_API
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger("Meme captions bot!")
 
-BOT_STATUS = "botStatus"
+STARTUP_TIME = datetime.now().timestamp()
 '''
 Constant for the current bot status
 '''
@@ -46,10 +46,9 @@ def about(update: Update, context: callbackcontext.CallbackContext):
     This is the function called by the bot
     when the "/about" command is executed.
     '''
-    botStatus = "✅" if context.bot_data[BOT_STATUS] else "❌"
     context.bot.send_message(
         chat_id=update.effective_chat.id, 
-        text=f"Hello! I am a bot 🤖{botStatus} made by **@Cawolf** to randomly "+
+        text=f"Hello! I am a bot 🤖 made by **@Cawolf** to randomly "+
         "caption people's profile pictures. You can find my source "+
         "code [on this github repository.]"+
         "(https://github.com/cawolfkreo/Caption-Users-Picures-Bot)",
@@ -60,12 +59,14 @@ def text(update: Update, context: callbackcontext.CallbackContext):
     This function is called by the bot
     when it sees a text message.
     '''
-    if not context.bot_data[BOT_STATUS]:
-        return
 
     chat = update.effective_chat
 
     if not update.message:
+        return
+    
+    if update.message.date.timestamp() < STARTUP_TIME:
+        printTime(logger, "Mensaje viejo, ignorado")
         return
 
     entities = update.message.parse_entities([MessageEntity.MENTION])
@@ -220,10 +221,6 @@ def startBot():
     dispatcher.add_handler(evil_handler)                    #The evil meme handler is given to the bot
     dispatcher.add_handler(everything_handler, group = 1)   #The default handler is given to the bot
 
-    dispatcher.bot_data[BOT_STATUS] = False
-    statusChange = Timer(interval=15, function=changeBotStatusActive, args=[dispatcher])
-    statusChange.start()                                    #Start timer and calls function to activate the bot
-
     if(ISPRODUCTION):
         webhook = f"https://{URL}/{TELEGRAM_API}"
         updater.start_webhook(listen="0.0.0.0",
@@ -232,13 +229,9 @@ def startBot():
                                 webhook_url=webhook)
     else:
         updater.start_polling()                             #Starts the bot 
-    printTime(logger, "The bot is starting! :)")
+    printTime(logger, "The bot has started! :)")
     updater.idle()                                          #Makes sure the bot stops when the ctrl+c signal is sent
     printTime(logger, "The bot stopped :C")
-
-def changeBotStatusActive(dispatcher: Dispatcher):
-    dispatcher.bot_data[BOT_STATUS]=True
-    printTime(logger, "Callback called, bot fully on! :D")
 
 '''
 This makes sure the bot run even if it's launched
