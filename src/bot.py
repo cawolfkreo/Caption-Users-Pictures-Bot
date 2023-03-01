@@ -66,7 +66,6 @@ def text(update: Update, context: callbackcontext.CallbackContext):
         return
     
     if update.message.date.timestamp() < STARTUP_TIME:
-        printTime(logger, "Mensaje viejo, ignorado")
         return
 
     entities = update.message.parse_entities([MessageEntity.MENTION])
@@ -172,7 +171,7 @@ def evilMeme(update: Update, context: callbackcontext.CallbackContext):
     resultImage = processImage(userProfilePic, textToDisplay, mention, True, name)
     
     if resultImage:
-        update.message.reply_photo(photo=resultImage,)
+        update.message.reply_photo(photo=resultImage)
     else:
         #if the user has no profile picture the bot will
         #default to this message as a reply.
@@ -180,8 +179,8 @@ def evilMeme(update: Update, context: callbackcontext.CallbackContext):
             chat_id = update.effective_chat.id, 
             text = ("Imagine this is the profile " +
                     f"picture of {mention} with the text " +
-                    "from the message I replied (?) Sorry" +
-                    "but that user privacy settings " +
+                    "from the message I replied (?) " +
+                    "Sorry but that user privacy settings " +
                     "doesn't allow me to use his " +
                     "profile picture 😅"),
             reply_to_message_id = message.message_id)
