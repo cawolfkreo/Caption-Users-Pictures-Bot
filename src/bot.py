@@ -1,7 +1,6 @@
 import logging
 from datetime import datetime
 from pathlib import Path
-from threading import Timer
 from telegram import MessageEntity, ChatAction, Update, UserProfilePhotos
 from telegram.ext import (
     CommandHandler,
@@ -9,7 +8,8 @@ from telegram.ext import (
     MessageHandler,
     PicklePersistence,
     Updater,
-    callbackcontext)
+    callbackcontext,
+    ContextTypes)
 from textManager import (
     getMentions,
     DictHasElems,
@@ -197,6 +197,11 @@ def everything(update, context):
         messageUser = update.effective_user
         processUser(messageUser, context.bot_data)
 
+def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+    '''Logs the error and prevents bot from crashing... I hope'''
+    printTime(logger, "The bot has found an error!")
+    logger.error(msg="Exception while handling an update:", exc_info=context.error)
+
 def startBot():
     '''
     This is the starting function for the bot.
@@ -219,6 +224,8 @@ def startBot():
     dispatcher.add_handler(text_handler)                    #The text handler is given to the bot
     dispatcher.add_handler(evil_handler)                    #The evil meme handler is given to the bot
     dispatcher.add_handler(everything_handler, group = 1)   #The default handler is given to the bot
+
+    dispatcher.add_error_handler(error_handler)
 
     if(ISPRODUCTION):
         webhook = f"https://{URL}/{TELEGRAM_API}"
