@@ -1,5 +1,5 @@
 from datetime import datetime
-from telegram import base, messageentity, userprofilephotos
+from telegram import MessageEntity, UserProfilePhotos
 import imageText
 from io import BytesIO
 import random
@@ -45,7 +45,7 @@ def DictHasElems(pDict):
     not empty"""
     return not not pDict
 
-def getMentions(entitiesDict: dict[str, str], typeToSearch: messageentity):
+def getMentions(entitiesDict: dict[str, str], typeToSearch: MessageEntity):
     for entity, text in entitiesDict.items():
         if(entity.type == typeToSearch):
             return text
@@ -110,10 +110,10 @@ def removeMention(textMessage: str, mention: str):
     return baseText.replace("  ", " ")          #This makes sure no extra whitespaces are in the message
 
 
-def processImage(userProfilePic: userprofilephotos, textMessage: str, mention: str, invert=False, name=""):
+async def processImage(userProfilePic: UserProfilePhotos, textMessage: str, mention: str, invert=False, name=""):
     if(userProfilePic.total_count > 0):
-        profilePicture = userProfilePic.photos[0][-1].get_file()        #This is the Highest resolution of the users profile picture.
-        photoByteArr = profilePicture.download_as_bytearray()
+        profilePicture = await userProfilePic.photos[0][-1].get_file()        #This is the Highest resolution of the users profile picture.
+        photoByteArr = await profilePicture.download_as_bytearray()
 
         oldImageBArr = BytesIO(photoByteArr)
         img = imageText.createImage(oldImageBArr)
