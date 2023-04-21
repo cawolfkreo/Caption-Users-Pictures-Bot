@@ -197,7 +197,7 @@ async def everything(update: Update, context: ContextTypes.DEFAULT_TYPE):
         messageUser = update.effective_user
         processUser(messageUser, context.bot_data)
 
-def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
     '''Logs the error and prevents bot from crashing... I hope'''
     printTime(logger, "The bot has found an error!")
     logger.error(msg="Exception while handling an update:", exc_info=context.error)
