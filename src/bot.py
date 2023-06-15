@@ -233,6 +233,7 @@ def startBot():
     application.add_error_handler(error_handler)
 
     printTime(logger, "The bot is starting... :)")
+    
     if(ISPRODUCTION):
         webhook = f"https://{URL}/{TELEGRAM_API}"
         application.run_webhook(listen="0.0.0.0",
